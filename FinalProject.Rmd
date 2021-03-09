@@ -58,5 +58,23 @@ ggplot(data = Korea_Unemployment, aes(x = Korea_Unemployment$TIME, y = Korea_Une
 ggplot(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
 ggplot(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
 
+ggplot(ylab = ("Unemployment Percentage") + xlab = ("Time") + ggtitle = ("Unemployment Rate by Month per Country")) + 
+  geom_line(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value), color = 'blue') + 
+    geom_point(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value), color = 'blue') +
+  geom_line(data = Canada_Unemployment, aes(x = Canada_Unemployment$TIME, y = Canada_Unemployment$Value), color = 'red') +
+    geom_point(data = Canada_Unemployment, aes(x = Canada_Unemployment$TIME, y = Canada_Unemployment$Value), color = 'red') + 
+  geom_line(data = Italy_Unemployment, aes(x = Italy_Unemployment$TIME, y = Italy_Unemployment$Value), color = 'green') + 
+    geom_point(data = Italy_Unemployment, aes(x = Italy_Unemployment$TIME, y = Italy_Unemployment$Value), color = 'green') + 
+  geom_line(data = Mexico_Unemployment, aes(x = Mexico_Unemployment$TIME, y = Mexico_Unemployment$Value), color = 'purple') + 
+    geom_point(data = Mexico_Unemployment, aes(x = Mexico_Unemployment$TIME, y = Mexico_Unemployment$Value), color = 'purple') + 
+  geom_line(data = Korea_Unemployment, aes(x = Korea_Unemployment$TIME, y = Korea_Unemployment$Value), color = 'orange') + 
+    geom_point(data = Korea_Unemployment, aes(x = Korea_Unemployment$TIME, y = Korea_Unemployment$Value), color = 'orange') + 
+  geom_line(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value), color = 'yellow') + 
+    geom_point(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value), color = 'yellow') + 
+  geom_line(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value), color = 'brown') +
+    geom_point(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value), color = 'brown')
+  
+  
+  
 ```
 
