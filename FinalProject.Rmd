@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```{r}
 #Covid data file, Columns broken into (Date, Country, Confirmed, Recovered, Deaths) 
 covid.df <- read.csv(file="countries-aggregated_csv.csv")
+covid.df$Country <- as.factor(covid.df$Country)
 
 #Fixing the datasheet regarding unemployment values, only selecting (Country, Date, Percentage of Unemployed)
 unemployment_all.df <- read.csv(file="Unemployment Rates_All Persons_2019M1-2020M12.csv")
@@ -30,6 +31,8 @@ unemployment_2020.df <- unemployment.df[unemployment.df$TIME >= "2020-01-01" & u
 #We had male and female data, however we're trying to look at the data when it's consolidated
 unemployment_2020_all.df <- unemployment_2020.df[unemployment_2020.df$Subject == "Unemployment rate (monthly), Total, All persons",]
 
+#We will now clean up the dataset of unemployment only for the Countries we're looking at.
+unemployment_2020_use.df <- unemployment_2020_all.df[unemployment_2020_all.df$Country == "Australia" | unemployment_2020_all.df$Country == "Canada" | unemployment_2020_all.df$Country == "Italy" | unemployment_2020_all.df$Country == "Japan" | unemployment_2020_all.df$Country == "Korea" | unemployment_2020_all.df$Country == "United Kingdom" | unemployment_2020_all.df$Country == "United States",]
 ```
 
 ## Visualization for Unemployment Rate
@@ -38,6 +41,8 @@ unemployment_2020_all.df <- unemployment_2020.df[unemployment_2020.df$Subject ==
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(tidyverse)
+library(purrr)
 #Checking unemployment data for:
 #Australia, Canada, Italy, Japan, Korea, United Kingdom, United States
 Australia_Unemployment <- subset(unemployment_2020_all.df, Country == "Australia")
@@ -47,6 +52,11 @@ Japan_Unemployment <- subset(unemployment_2020_all.df, Country == "Japan")
 Korea_Unemployment <- subset(unemployment_2020_all.df, Country == "Korea")
 UnitedKingdom_Unemployment <- subset(unemployment_2020_all.df, Country == "United Kingdom")
 UnitedStates_Unemployment <- subset(unemployment_2020_all.df, Country == "United States")
+ 
+ggplot(unemployment_2020_use.df, aes(x = unemployment_2020_use.df$TIME, y = unemployment_2020_use.df$Value, linetype = Country))+ geom_line() + geom_point() + ylab("Unemployment Percentage") + xlab("Time") + ggtitle("Unemployment Rate by Month per Country")
+       
+
+setNames(list(Australia_Unemployment, Canada_Unemployment, Italy_Unemployment, Japan_Unemployment, Korea_Unemployment, UnitedKingdom_Unemployment, UnitedStates_Unemployment), C("Australia", "Canada","Italy","Japan","Korea","United Kingdom", "United States")) %>% map_def(~ .x %>% gather(key, value, -Date), .id="source") %>% ggplot(aes(Date, value, colour=key, linetype=source)) + geom_line() + scale_colour_manual(values=c('red','blue','green','pink','yellow','black','orange')) + theme_classic()
 
 ggplot(data = unemployment_2020_all.df, aes(x=TIME, y=Value)) + 
   geom_line(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value), color = 'blue') + 
@@ -137,6 +147,7 @@ Japan_COVID <- subset(covid_Monthlytotal.df, Country == "Japan")
 Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
 UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
 UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
+
 ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
   geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Deaths), color = 'blue') + 
   geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Death), color = 'red') +
