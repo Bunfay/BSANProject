@@ -12,6 +12,11 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Cleaning Data
 
 ```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(R.utils)
 #Covid data file, Columns broken into (Date, Country, Confirmed, Recovered, Deaths) 
 covid.df <- read.csv(file="countries-aggregated_csv.csv")
 covid.df$Country <- as.factor(covid.df$Country)
@@ -25,6 +30,12 @@ library(readr)
 covid.df$Date <- as.Date(covid.df$Date)
 covid_Monthlytotal.df <- covid.df[covid.df$Date == "2020-01-31" | covid.df$Date == "2020-02-29" | covid.df$Date == "2020-03-31" | covid.df$Date == "2020-04-30" | covid.df$Date == "2020-05-31" | covid.df$Date == "2020-06-30" | covid.df$Date == "2020-07-31" | covid.df$Date == "2020-08-31" | covid.df$Date == "2020-09-30" | covid.df$Date == "2020-10-31" | covid.df$Date == "2020-11-30" | covid.df$Date == "2020-12-31",]
 
+covid_use.df <- covid_Monthlytotal.df[covid_Monthlytotal.df$Country == "Australia" | covid_Monthlytotal.df$Country == "Canada" | covid_Monthlytotal.df$Country == "Italy" | covid_Monthlytotal.df$Country == "Japan" | covid_Monthlytotal.df$Country == "Korea, South" | covid_Monthlytotal.df$Country == "United Kingdom" | covid_Monthlytotal.df$Country == "US",]
+
+index_country <- c("Australia", "Canada","Italy","Japan", "Korea, South", "United Kingdom", "US")
+values_country <- c("Australia", "Canada","Italy","Japan", "Korea", "United Kingdom","United States")
+covid_use.df$Country <- values_country[match(trim(covid_use.df$Country),index_country)]
+
 #We need to introduce a day of 01 to match R's date time format of YYYY-MM-DD
 unemployment.df$TIME <- as.Date(paste(unemployment.df$TIME,"-01",sep=""))
 unemployment_2020.df <- unemployment.df[unemployment.df$TIME >= "2020-01-01" & unemployment.df$TIME <= "2020-12-31",]
@@ -33,147 +44,40 @@ unemployment_2020_all.df <- unemployment_2020.df[unemployment_2020.df$Subject ==
 
 #We will now clean up the dataset of unemployment only for the Countries we're looking at.
 unemployment_2020_use.df <- unemployment_2020_all.df[unemployment_2020_all.df$Country == "Australia" | unemployment_2020_all.df$Country == "Canada" | unemployment_2020_all.df$Country == "Italy" | unemployment_2020_all.df$Country == "Japan" | unemployment_2020_all.df$Country == "Korea" | unemployment_2020_all.df$Country == "United Kingdom" | unemployment_2020_all.df$Country == "United States",]
+
+index_covid <- c("2020-01-31","2020-02-29","2020-03-31","2020-04-30","2020-05-31","2020-06-30","2020-07-31","2020-08-31","2020-09-30","2020-10-31","2020-11-30","2020-12-31")
+index_unemployment <- c("2020-01-01","2020-02-01","2020-03-01","2020-04-01","2020-05-01","2020-06-01","2020-07-01","2020-08-01","2020-09-01","2020-10-01","2020-11-01","2020-12-01")
+values <- c("January", "February","March","April","May","June","July","August","September","October","November","December")
+covid_use.df$Months <- values[match(trim(covid_use.df$Date),index_covid)]
+unemployment_2020_use.df$Months <- values[match(trim(unemployment_2020_use.df$TIME),index_unemployment)]
+
+merged_data_rough <- merge(covid_use.df,unemployment_2020_use.df, by = c("Months","Country"), all=TRUE)
+merged_data <- merged_data_rough[complete.cases(merged_data_rough),]
 ```
 
 ## Visualization for Unemployment Rate
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(tidyverse)
-library(purrr)
-#Checking unemployment data for:
-#Australia, Canada, Italy, Japan, Korea, United Kingdom, United States
-Australia_Unemployment <- subset(unemployment_2020_all.df, Country == "Australia")
-Canada_Unemployment <- subset(unemployment_2020_all.df, Country == "Canada")
-Italy_Unemployment <- subset(unemployment_2020_all.df, Country == "Italy")
-Japan_Unemployment <- subset(unemployment_2020_all.df, Country == "Japan")
-Korea_Unemployment <- subset(unemployment_2020_all.df, Country == "Korea")
-UnitedKingdom_Unemployment <- subset(unemployment_2020_all.df, Country == "United Kingdom")
-UnitedStates_Unemployment <- subset(unemployment_2020_all.df, Country == "United States")
- 
-ggplot(unemployment_2020_use.df, aes(x = unemployment_2020_use.df$TIME, y = unemployment_2020_use.df$Value, linetype = Country))+ geom_line() + geom_point() + ylab("Unemployment Percentage") + xlab("Time") + ggtitle("Unemployment Rate by Month per Country")
-       
-
-setNames(list(Australia_Unemployment, Canada_Unemployment, Italy_Unemployment, Japan_Unemployment, Korea_Unemployment, UnitedKingdom_Unemployment, UnitedStates_Unemployment), C("Australia", "Canada","Italy","Japan","Korea","United Kingdom", "United States")) %>% map_def(~ .x %>% gather(key, value, -Date), .id="source") %>% ggplot(aes(Date, value, colour=key, linetype=source)) + geom_line() + scale_colour_manual(values=c('red','blue','green','pink','yellow','black','orange')) + theme_classic()
-
-ggplot(data = unemployment_2020_all.df, aes(x=TIME, y=Value)) + 
-  geom_line(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value), color = 'blue') + 
-    geom_point(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value), color = 'blue') +
-  geom_line(data = Canada_Unemployment, aes(x = Canada_Unemployment$TIME, y = Canada_Unemployment$Value), color = 'red') +
-    geom_point(data = Canada_Unemployment, aes(x = Canada_Unemployment$TIME, y = Canada_Unemployment$Value), color = 'red') + 
-  geom_line(data = Italy_Unemployment, aes(x = Italy_Unemployment$TIME, y = Italy_Unemployment$Value), color = 'green') + 
-    geom_point(data = Italy_Unemployment, aes(x = Italy_Unemployment$TIME, y = Italy_Unemployment$Value), color = 'green') + 
-  geom_line(data = Japan_Unemployment, aes(x = Japan_Unemployment$TIME, y = Japan_Unemployment$Value), color = 'purple') + 
-    geom_point(data = Japan_Unemployment, aes(x = Japan_Unemployment$TIME, y = Japan_Unemployment$Value), color = 'purple') + 
-  geom_line(data = Korea_Unemployment, aes(x = Korea_Unemployment$TIME, y = Korea_Unemployment$Value), color = 'orange') + 
-    geom_point(data = Korea_Unemployment, aes(x = Korea_Unemployment$TIME, y = Korea_Unemployment$Value), color = 'orange') + 
-  geom_line(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value), color = 'yellow') + 
-    geom_point(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value), color = 'yellow') + 
-  geom_line(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value), color = 'black') +
-    geom_point(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value), color = 'black') +
-  ylab("Unemployment Percentage") + xlab("Time") + ggtitle("Unemployment Rate by Month per Country") +
-  scale_fill_discrete(guide = guide_legend(reverse=TRUE))
-
+ggplot(unemployment_2020_use.df, aes(x = unemployment_2020_use.df$TIME, y = unemployment_2020_use.df$Value, linetype = Country, color = Country))+ geom_line() + geom_point() + ylab("Unemployment Percentage") + xlab("Time") + ggtitle("Unemployment Rate by Month per Country") + scale_color_manual(values = c("red", "blue", "green", "pink", "yellow", "black","orange")) + scale_linetype_manual(values = c(1, 1, 1, 1, 1, 1, 1, 1))
 ```
 
 ## Visualization for COVID cases per country
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-#Checking unemployment data for:
-#Australia, Canada, Italy, Japan, Korea, United Kingdom, United States
-Australia_COVID <- subset(covid_Monthlytotal.df, Country == "Australia")
-Canada_COVID <- subset(covid_Monthlytotal.df, Country == "Canada")
-Italy_COVID <- subset(covid_Monthlytotal.df, Country == "Italy")
-Japan_COVID <- subset(covid_Monthlytotal.df, Country == "Japan")
-Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
-UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
-UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
-
-ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
-  geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Confirmed), color = 'blue') + 
-  geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Confirmed), color = 'red') +
-  geom_line(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Confirmed), color = 'green') + 
-  geom_line(data = Japan_COVID, aes(x = Japan_COVID$Date, y = Japan_COVID$Confirmed), color = 'purple') + 
-  geom_line(data = Korea_COVID, aes(x = Korea_COVID$Date, y = Korea_COVID$Confirmed), color = 'orange') + 
-  geom_line(data = UnitedKingdom_COVID, aes(x = UnitedKingdom_COVID$Date, y = UnitedKingdom_COVID$Confirmed), color = 'yellow') + 
-  geom_line(data = UnitedStates_COVID, aes(x = UnitedStates_COVID$Date, y = UnitedStates_COVID$Confirmed), color = 'black') +
-  ylab("COVID Cases") + xlab("Time") + ggtitle("COVID Cases by Time per Country") +
-  scale_fill_discrete(guide = guide_legend(reverse=TRUE))
-
+ggplot(covid_use.df, aes(x = covid_use.df$Date, y = covid_use.df$Confirmed, linetype = Country, color = Country))+ geom_line() + geom_point() + ylab("COVID Cases") + xlab("Time") + ggtitle("COVID Cases by Month per Country") + scale_color_manual(values = c("red", "blue", "green", "pink", "yellow", "black","orange")) + scale_linetype_manual(values = c(1, 1, 1, 1, 1, 1, 1, 1))
 ```
 
 ## Visualization for COVID recovery per country
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-#Checking unemployment data for:
-#Australia, Canada, Italy, Japan, Korea, United Kingdom, United States
-Australia_COVID <- subset(covid_Monthlytotal.df, Country == "Australia")
-Canada_COVID <- subset(covid_Monthlytotal.df, Country == "Canada")
-Italy_COVID <- subset(covid_Monthlytotal.df, Country == "Italy")
-Japan_COVID <- subset(covid_Monthlytotal.df, Country == "Japan")
-Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
-UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
-UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
-
-ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
-  geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Recovered), color = 'blue') + 
-  geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Recovered), color = 'red') +
-  geom_line(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Recovered), color = 'green') + 
-  geom_line(data = Japan_COVID, aes(x = Japan_COVID$Date, y = Japan_COVID$Recovered), color = 'purple') + 
-  geom_line(data = Korea_COVID, aes(x = Korea_COVID$Date, y = Korea_COVID$Recovered), color = 'orange') + 
-  geom_line(data = UnitedKingdom_COVID, aes(x = UnitedKingdom_COVID$Date, y = UnitedKingdom_COVID$Recovered), color = 'yellow') + 
-  geom_line(data = UnitedStates_COVID, aes(x = UnitedStates_COVID$Date, y = UnitedStates_COVID$Recovered), color = 'black') +
-  ylab("COVID Recovery") + xlab("Time") + ggtitle("COVID Recovery by Time per Country") +
-  scale_fill_discrete(guide = guide_legend(reverse=TRUE))
+ggplot(covid_use.df, aes(x = covid_use.df$Date, y = covid_use.df$Recovered, linetype = Country, color = Country))+ geom_line() + geom_point() + ylab("COVID Recovery") + xlab("Time") + ggtitle("COVID Recovery by Month per Country") + scale_color_manual(values = c("red", "blue", "green", "pink", "yellow", "black","orange")) + scale_linetype_manual(values = c(1, 1, 1, 1, 1, 1, 1, 1))
 ```
 
 ## Visualization for COVID death per country
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-#Checking unemployment data for:
-#Australia, Canada, Italy, Japan, Korea, United Kingdom, United States
-Australia_COVID <- subset(covid_Monthlytotal.df, Country == "Australia")
-Canada_COVID <- subset(covid_Monthlytotal.df, Country == "Canada")
-Italy_COVID <- subset(covid_Monthlytotal.df, Country == "Italy")
-Japan_COVID <- subset(covid_Monthlytotal.df, Country == "Japan")
-Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
-UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
-UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
-
-ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
-  geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Deaths), color = 'blue') + 
-  geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Death), color = 'red') +
-  geom_line(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Death), color = 'green') + 
-  geom_line(data = Japan_COVID, aes(x = Japan_COVID$Date, y = Japan_COVID$Death), color = 'purple') + 
-  geom_line(data = Korea_COVID, aes(x = Korea_COVID$Date, y = Korea_COVID$Death), color = 'orange') + 
-  geom_line(data = UnitedKingdom_COVID, aes(x = UnitedKingdom_COVID$Date, y = UnitedKingdom_COVID$Death), color = 'yellow') + 
-  geom_line(data = UnitedStates_COVID, aes(x = UnitedStates_COVID$Date, y = UnitedStates_COVID$Death), color = 'black') +
-  ylab("COVID Deaths") + xlab("Time") + ggtitle("COVID Deaths by Time per Country") +
-  scale_fill_discrete(guide = guide_legend(reverse=TRUE))
+ggplot(covid_use.df, aes(x = covid_use.df$Date, y = covid_use.df$Death, linetype = Country, color = Country))+ geom_line() + geom_point() + ylab("COVID Death") + xlab("Time") + ggtitle("COVID Death by Month per Country") + scale_color_manual(values = c("red", "blue", "green", "pink", "yellow", "black","orange")) + scale_linetype_manual(values = c(1, 1, 1, 1, 1, 1, 1, 1))
 ```
 
-## Visualization for COVID death per country
+## Linear Regression Modeling
 ```{r}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(R.utils)
-index_covid <- c("2020-01-31","2020-02-29","2020-03-31","2020-04-30","2020-05-31","2020-06-30","2020-07-31","2020-08-31","2020-09-30","2020-10-31","2020-11-30","2020-12-31")
-index_unemployment <- c("2020-01-01","2020-02-01","2020-03-01","2020-04-01","2020-05-01","2020-06-01","2020-07-01","2020-08-01","2020-09-01","2020-10-01","2020-11-01","2020-12-01")
-values <- c("January", "February","March","April","May","June","July","August","September","October","November","December")
-covid_Monthlytotal.df$Months <- values[match(trim(covid_Monthlytotal.df$Date),index_covid)]
-unemployment_2020_all.df$Months <- values[match(trim(unemployment_2020_all.df$TIME),index_unemployment)]
-
-merged_data_rough <- merge(covid_Monthlytotal.df,unemployment_2020_all.df, by = c("Months","Country"), all=TRUE)
-merged_data <- merged_data_rough[complete.cases(merged_data_rough),]
 
 Australia_Merged <- subset(merged_data, Country == "Australia")
 Canada_Merged <- subset(merged_data, Country == "Canada")
@@ -188,4 +92,24 @@ lm_Australia
 
 lm_all <- lm(Value ~ Confirmed, data = merged_data)
 lm_all
+```
+
+## ANOVA & Tukey Test
+```{r}
+merged_data$Country <- as.factor(merged_data$Country)
+merged_data$TIME <- as.factor(merged_data$TIME)
+b <- aov(merged_data$Value * merged_data$Confirmed ~ merged_data$Country + merged_data$TIME, data = merged_data)
+anova(b)
+TukeyHSD(b)
+```
+## Scatterplot Matrix
+```{r}
+scatterplotMatrix(merged_data[,c(4:6,9)])
+```
+## Correlation Matrix
+```{r}
+library(corrplot)
+
+cmat <- cor(merged_data[,c(4:6,9)])
+corrplot.mixed(cmat)
 ```
