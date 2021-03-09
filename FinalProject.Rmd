@@ -31,34 +31,23 @@ unemployment_2020_all.df <- unemployment_2020.df[unemployment_2020.df$Subject ==
 
 ```
 
-## Visualization
+## Visualization for Unemployment Rate
 
 ```{r}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
-#Checking data for:
-#Australia, Canada, France, Italy, Mexico, Korea, United Kingdom, United States
+#Checking unemployment data for:
+#Australia, Canada, Italy, Mexico, Korea, United Kingdom, United States
 Australia_Unemployment <- subset(unemployment_2020_all.df, Country == "Australia")
 Canada_Unemployment <- subset(unemployment_2020_all.df, Country == "Canada")
-France_Unemployment <- subset(unemployment_2020_all.df, Country == "France")
 Italy_Unemployment <- subset(unemployment_2020_all.df, Country == "Italy")
 Mexico_Unemployment <- subset(unemployment_2020_all.df, Country == "Mexico")
 Korea_Unemployment <- subset(unemployment_2020_all.df, Country == "Korea")
 UnitedKingdom_Unemployment <- subset(unemployment_2020_all.df, Country == "United Kingdom")
 UnitedStates_Unemployment <- subset(unemployment_2020_all.df, Country == "United States")
 
-
-ggplot(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-ggplot(data = Canada_Unemployment, aes(x = Canada_Unemployment$TIME, y = Canada_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-ggplot(data = France_Unemployment, aes(x = France_Unemployment$TIME, y = France_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-ggplot(data = Italy_Unemployment, aes(x = Italy_Unemployment$TIME, y = Italy_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-ggplot(data = Mexico_Unemployment, aes(x = Mexico_Unemployment$TIME, y = Mexico_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-ggplot(data = Korea_Unemployment, aes(x = Korea_Unemployment$TIME, y = Korea_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-ggplot(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-ggplot(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
-
-ggplot(ylab = ("Unemployment Percentage") + xlab = ("Time") + ggtitle = ("Unemployment Rate by Month per Country")) + 
+ggplot(data = unemployment_2020_all.df, aes(x=TIME, y=Value)) + 
   geom_line(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value), color = 'blue') + 
     geom_point(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value), color = 'blue') +
   geom_line(data = Canada_Unemployment, aes(x = Canada_Unemployment$TIME, y = Canada_Unemployment$Value), color = 'red') +
@@ -72,9 +61,43 @@ ggplot(ylab = ("Unemployment Percentage") + xlab = ("Time") + ggtitle = ("Unempl
   geom_line(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value), color = 'yellow') + 
     geom_point(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value), color = 'yellow') + 
   geom_line(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value), color = 'brown') +
-    geom_point(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value), color = 'brown')
-  
-  
-  
+    geom_point(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value), color = 'brown') +
+  ylab("Unemployment Percentage") + xlab("Time") + ggtitle("Unemployment Rate by Month per Country") +
+  scale_fill_discrete(guide = guide_legend(reverse=TRUE))
+
 ```
 
+## Visualization for COVID cases per country
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+#Checking unemployment data for:
+#Australia, Canada, Italy, Mexico, Korea, United Kingdom, United States
+Australia_COVID <- subset(covid.df, Country == "Australia")
+Canada_COVID <- subset(covid.df, Country == "Canada")
+Italy_COVID <- subset(covid.df, Country == "Italy")
+Mexico_COVID <- subset(covid.df, Country == "Mexico")
+Korea_COVID <- subset(covid.df, Country == "Korea")
+UnitedKingdom_COVID <- subset(covid.df, Country == "United Kingdom")
+UnitedStates_COVID <- subset(covid.df, Country == "US")
+
+ggplot(data = covid.df, aes(x=TIME, y=Value)) + 
+  geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Confirmed), color = 'blue') + 
+    geom_point(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Confirmed), color = 'blue') +
+  geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Confirmed), color = 'red') +
+    geom_point(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Confirmed), color = 'red') + 
+  geom_line(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Confirmed), color = 'green') + 
+    geom_point(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Confirmed), color = 'green') + 
+  geom_line(data = Mexico_COVID, aes(x = Mexico_COVID$Date, y = Mexico_COVID$Confirmed), color = 'purple') + 
+    geom_point(data = Mexico_COVID, aes(x = Mexico_COVID$Date, y = Mexico_COVID$Confirmed), color = 'purple') + 
+  geom_line(data = Korea_COVID, aes(x = Korea_COVID$Date, y = Korea_COVID$Confirmed), color = 'orange') + 
+    geom_point(data = Korea_COVID, aes(x = Korea_COVID$Date, y = Korea_COVID$Confirmed), color = 'orange') + 
+  geom_line(data = UnitedKingdom_COVID, aes(x = UnitedKingdom_COVID$Date, y = UnitedKingdom_COVID$Confirmed), color = 'yellow') + 
+    geom_point(data = UnitedKingdom_COVID, aes(x = UnitedKingdom_COVID$Date, y = UnitedKingdom_COVID$Confirmed), color = 'yellow') + 
+  geom_line(data = UnitedStates_COVID, aes(x = UnitedStates_COVID$Date, y = UnitedStates_COVID$Confirmed), color = 'brown') +
+    geom_point(data = UnitedStates_COVID, aes(x = UnitedStates_COVID$Date, y = UnitedStates_COVID$Confirmed), color = 'brown') +
+  ylab("COVID Cases by Time per Country") + xlab("Time") + ggtitle("COVID Cases") +
+  scale_fill_discrete(guide = guide_legend(reverse=TRUE))
+
+```
