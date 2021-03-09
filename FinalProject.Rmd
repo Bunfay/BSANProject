@@ -17,7 +17,7 @@ covid.df <- read.csv(file="countries-aggregated_csv.csv")
 
 #Fixing the datasheet regarding unemployment values, only selecting (Country, Date, Percentage of Unemployed)
 unemployment_all.df <- read.csv(file="Unemployment Rates_All Persons_2019M1-2020M12.csv")
-unemployment.df <- unemployment_all.df[,c(2,9,17)]
+unemployment.df <- unemployment_all.df[,c(2,4,9,17)]
 
 #Setting Covid date and Unemployment date as a date-type field
 library(readr)
@@ -26,7 +26,8 @@ covid_Monthlytotal.df <- covid.df[covid.df$Date == "2020-01-31" | covid.df$Date 
 
 #We need to introduce a day of 01 to match R's date time format of YYYY-MM-DD
 unemployment.df$TIME <- as.Date(paste(unemployment.df$TIME,"-01",sep=""))
-unemployment.df <- unemployment.df[unemployment.df$TIME >= "2020-01-01" & unemployment.df$TIME <= "2020-12-31",]
+unemployment_2020.df <- unemployment.df[unemployment.df$TIME >= "2020-01-01" & unemployment.df$TIME <= "2020-12-31",]
+unemployment_2020_all.df <- unemployment_2020.df[unemployment_2020.df$Subject == "Unemployment rate (monthly), Total, All persons",]
 
 ```
 
@@ -37,12 +38,25 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 #Checking data for:
-#United States, Russia, France, United Kingdom, Australia, Spain, Italy
-unemployment_cleaned <- unemployment.df %>%
-  select(date, Austrlia, Confirmed) %>%
-  gather(key = "Country", value = "Value", -date)
-head(df)
+#Australia, Canada, France, Italy, Mexico, Korea, United Kingdom, United States
+Australia_Unemployment <- subset(unemployment_2020_all.df, Country == "Australia")
+Canada_Unemployment <- subset(unemployment_2020_all.df, Country == "Canada")
+France_Unemployment <- subset(unemployment_2020_all.df, Country == "France")
+Italy_Unemployment <- subset(unemployment_2020_all.df, Country == "Italy")
+Mexico_Unemployment <- subset(unemployment_2020_all.df, Country == "Mexico")
+Korea_Unemployment <- subset(unemployment_2020_all.df, Country == "Korea")
+UnitedKingdom_Unemployment <- subset(unemployment_2020_all.df, Country == "United Kingdom")
+UnitedStates_Unemployment <- subset(unemployment_2020_all.df, Country == "United States")
 
-a <- ggplot(data = covid.df, aes(x = covid.df$Date, y = covid.df$Confirmed)) + geom_line() + xlab("")
-a
+
+ggplot(data = Australia_Unemployment, aes(x = Australia_Unemployment$TIME, y = Australia_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+ggplot(data = Canada_Unemployment, aes(x = Canada_Unemployment$TIME, y = Canada_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+ggplot(data = France_Unemployment, aes(x = France_Unemployment$TIME, y = France_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+ggplot(data = Italy_Unemployment, aes(x = Italy_Unemployment$TIME, y = Italy_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+ggplot(data = Mexico_Unemployment, aes(x = Mexico_Unemployment$TIME, y = Mexico_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+ggplot(data = Korea_Unemployment, aes(x = Korea_Unemployment$TIME, y = Korea_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+ggplot(data = UnitedKingdom_Unemployment, aes(x = UnitedKingdom_Unemployment$TIME, y = UnitedKingdom_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+ggplot(data = UnitedStates_Unemployment, aes(x = UnitedStates_Unemployment$TIME, y = UnitedStates_Unemployment$Value)) + xlab("Date") + ylab("Unemployment Percentage") +geom_point() + geom_line(linetype = "dashed")
+
 ```
+
