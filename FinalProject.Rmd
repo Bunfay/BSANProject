@@ -137,7 +137,6 @@ Japan_COVID <- subset(covid_Monthlytotal.df, Country == "Japan")
 Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
 UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
 UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
-
 ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
   geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Deaths), color = 'blue') + 
   geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Death), color = 'red') +
