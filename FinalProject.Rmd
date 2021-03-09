@@ -75,15 +75,15 @@ library(dplyr)
 library(tidyr)
 #Checking unemployment data for:
 #Australia, Canada, Italy, Mexico, Korea, United Kingdom, United States
-Australia_COVID <- subset(covid.df, Country == "Australia")
-Canada_COVID <- subset(covid.df, Country == "Canada")
-Italy_COVID <- subset(covid.df, Country == "Italy")
-Mexico_COVID <- subset(covid.df, Country == "Mexico")
-Korea_COVID <- subset(covid.df, Country == "Korea")
-UnitedKingdom_COVID <- subset(covid.df, Country == "United Kingdom")
-UnitedStates_COVID <- subset(covid.df, Country == "US")
+Australia_COVID <- subset(covid_Monthlytotal.df, Country == "Australia")
+Canada_COVID <- subset(covid_Monthlytotal.df, Country == "Canada")
+Italy_COVID <- subset(covid_Monthlytotal.df, Country == "Italy")
+Mexico_COVID <- subset(covid_Monthlytotal.df, Country == "Mexico")
+Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
+UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
+UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
 
-ggplot(data = covid.df, aes(x=TIME, y=Value)) + 
+ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
   geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Confirmed), color = 'blue') + 
   geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Confirmed), color = 'red') +
   geom_line(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Confirmed), color = 'green') + 
@@ -103,15 +103,15 @@ library(dplyr)
 library(tidyr)
 #Checking unemployment data for:
 #Australia, Canada, Italy, Mexico, Korea, United Kingdom, United States
-Australia_COVID <- subset(covid.df, Country == "Australia")
-Canada_COVID <- subset(covid.df, Country == "Canada")
-Italy_COVID <- subset(covid.df, Country == "Italy")
-Mexico_COVID <- subset(covid.df, Country == "Mexico")
-Korea_COVID <- subset(covid.df, Country == "Korea")
-UnitedKingdom_COVID <- subset(covid.df, Country == "United Kingdom")
-UnitedStates_COVID <- subset(covid.df, Country == "US")
+Australia_COVID <- subset(covid_Monthlytotal.df, Country == "Australia")
+Canada_COVID <- subset(covid_Monthlytotal.df, Country == "Canada")
+Italy_COVID <- subset(covid_Monthlytotal.df, Country == "Italy")
+Mexico_COVID <- subset(covid_Monthlytotal.df, Country == "Mexico")
+Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
+UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
+UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
 
-ggplot(data = covid.df, aes(x=TIME, y=Value)) + 
+ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
   geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Recovered), color = 'blue') + 
   geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Recovered), color = 'red') +
   geom_line(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Recovered), color = 'green') + 
@@ -130,15 +130,15 @@ library(dplyr)
 library(tidyr)
 #Checking unemployment data for:
 #Australia, Canada, Italy, Mexico, Korea, United Kingdom, United States
-Australia_COVID <- subset(covid.df, Country == "Australia")
-Canada_COVID <- subset(covid.df, Country == "Canada")
-Italy_COVID <- subset(covid.df, Country == "Italy")
-Mexico_COVID <- subset(covid.df, Country == "Mexico")
-Korea_COVID <- subset(covid.df, Country == "Korea")
-UnitedKingdom_COVID <- subset(covid.df, Country == "United Kingdom")
-UnitedStates_COVID <- subset(covid.df, Country == "US")
+Australia_COVID <- subset(covid_Monthlytotal.df, Country == "Australia")
+Canada_COVID <- subset(covid_Monthlytotal.df, Country == "Canada")
+Italy_COVID <- subset(covid_Monthlytotal.df, Country == "Italy")
+Mexico_COVID <- subset(covid_Monthlytotal.df, Country == "Mexico")
+Korea_COVID <- subset(covid_Monthlytotal.df, Country == "Korea")
+UnitedKingdom_COVID <- subset(covid_Monthlytotal.df, Country == "United Kingdom")
+UnitedStates_COVID <- subset(covid_Monthlytotal.df, Country == "US")
 
-ggplot(data = covid.df, aes(x=TIME, y=Value)) + 
+ggplot(data = covid_Monthlytotal.df, aes(x=TIME, y=Value)) + 
   geom_line(data = Australia_COVID, aes(x = Australia_COVID$Date, y = Australia_COVID$Deaths), color = 'blue') + 
   geom_line(data = Canada_COVID, aes(x = Canada_COVID$Date, y = Canada_COVID$Death), color = 'red') +
   geom_line(data = Italy_COVID, aes(x = Italy_COVID$Date, y = Italy_COVID$Death), color = 'green') + 
