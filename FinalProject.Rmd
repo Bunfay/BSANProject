@@ -90,9 +90,9 @@ lm_all
 ```{r}
 merged_data$Country <- as.factor(merged_data$Country)
 merged_data$TIME <- as.factor(merged_data$TIME)
-b <- aov(merged_data$Value * merged_data$Confirmed ~ merged_data$Country + merged_data$TIME, data = merged_data)
-anova(b)
-TukeyHSD(b)
+a <- aov(merged_data$Value * merged_data$Confirmed ~ merged_data$Country + merged_data$TIME, data = merged_data)
+anova(a)
+TukeyHSD(a)
 ```
 ## Scatterplot Matrix
 ```{r}
@@ -110,9 +110,9 @@ corrplot.mixed(cmat)
 
 ## Scatterplots
 ```{r}
-ggplot(merged_data_no_US, aes(x = merged_data_no_US$Confirmed, y = merged_data_no_US$Value, linetype = Country, color = Country)) + geom_point() + scale_color_manual(values = c("red", "blue", "green", "pink", "yellow", "black"))
+ggplot(merged_data_no_US, aes(x = merged_data_no_US$Confirmed, y = merged_data_no_US$Value, linetype = Country, color = Country)) + geom_point() + ylab("Unemployment Rate") + xlab("COVID Cases") + ggtitle("COVID Cases vs. Unemployment Rate in non-US Countries") + scale_color_manual(values = c("red", "blue", "green", "pink", "yellow", "black"))
 
-ggplot(merged_data_US, aes(x = merged_data_US$Confirmed, y = merged_data_US$Value, linetype = Country, color = Country)) + geom_point() + scale_color_manual(values = c("orange"))
+ggplot(merged_data_US, aes(x = merged_data_US$Confirmed, y = merged_data_US$Value, linetype = Country, color = Country)) + geom_point() + ylab("Unemployment Rate") + xlab("COVID Cases") + ggtitle("COVID Cases vs. Unemployment Rate in the US") + scale_color_manual(values = c("orange"))
 
 merged_data_no_US <- subset(merged_data, Country != "United States")
 merged_data_US <- subset(merged_data, Country == "United States")
