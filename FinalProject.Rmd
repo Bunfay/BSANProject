@@ -28,7 +28,7 @@ unemployment.df <- unemployment_all.df[,c(2,4,9,17)]
 #Setting Covid date and Unemployment date as a date-type field
 library(readr)
 covid.df$Date <- as.Date(covid.df$Date)
-covid_Monthlytotal.df <- covid.df[covid.df$Date == "2020-01-31" | covid.df$Date == "2020-02-29" | covid.df$Date == "2020-03-31" | covid.df$Date == "2020-04-30" | covid.df$Date == "2020-05-31" | covid.df$Date == "2020-06-30" | covid.df$Date == "2020-07-31" | covid.df$Date == "2020-08-31" | covid.df$Date == "2020-09-30" | covid.df$Date == "2020-10-31" | covid.df$Date == "2020-11-30" | covid.df$Date == "2020-12-31",]
+covid_Monthlytotal.df <- covid.df[covid.df$Date == "2020-01-31" | covid.df$Date == "2020-02-29" | covid.df$Date == "2020-03-31" | covid.df$Date == "2020-04-30" | covid.df$Date == "2020-05-31" | covid.df$Date == "2020-06-30" | covid.df$Date == "2020-07-31" | covid.df$Date == "2020-08-31" | covid.df$Date == "2020-09-30" | covid.df$Date == "2020-10-31" | covid.df$Date == "2020-11-30",]
 
 covid_use.df <- covid_Monthlytotal.df[covid_Monthlytotal.df$Country == "Australia" | covid_Monthlytotal.df$Country == "Canada" | covid_Monthlytotal.df$Country == "Italy" | covid_Monthlytotal.df$Country == "Japan" | covid_Monthlytotal.df$Country == "Korea, South" | covid_Monthlytotal.df$Country == "United Kingdom" | covid_Monthlytotal.df$Country == "US",]
 
@@ -38,16 +38,16 @@ covid_use.df$Country <- values_country[match(trim(covid_use.df$Country),index_co
 
 #We need to introduce a day of 01 to match R's date time format of YYYY-MM-DD
 unemployment.df$TIME <- as.Date(paste(unemployment.df$TIME,"-01",sep=""))
-unemployment_2020.df <- unemployment.df[unemployment.df$TIME >= "2020-01-01" & unemployment.df$TIME <= "2020-12-31",]
+unemployment_2020.df <- unemployment.df[unemployment.df$TIME >= "2020-01-01" & unemployment.df$TIME <= "2020-11-30",]
 #We had male and female data, however we're trying to look at the data when it's consolidated
 unemployment_2020_all.df <- unemployment_2020.df[unemployment_2020.df$Subject == "Unemployment rate (monthly), Total, All persons",]
 
 #We will now clean up the dataset of unemployment only for the Countries we're looking at.
 unemployment_2020_use.df <- unemployment_2020_all.df[unemployment_2020_all.df$Country == "Australia" | unemployment_2020_all.df$Country == "Canada" | unemployment_2020_all.df$Country == "Italy" | unemployment_2020_all.df$Country == "Japan" | unemployment_2020_all.df$Country == "Korea" | unemployment_2020_all.df$Country == "United Kingdom" | unemployment_2020_all.df$Country == "United States",]
 
-index_covid <- c("2020-01-31","2020-02-29","2020-03-31","2020-04-30","2020-05-31","2020-06-30","2020-07-31","2020-08-31","2020-09-30","2020-10-31","2020-11-30","2020-12-31")
-index_unemployment <- c("2020-01-01","2020-02-01","2020-03-01","2020-04-01","2020-05-01","2020-06-01","2020-07-01","2020-08-01","2020-09-01","2020-10-01","2020-11-01","2020-12-01")
-values <- c("January", "February","March","April","May","June","July","August","September","October","November","December")
+index_covid <- c("2020-01-31","2020-02-29","2020-03-31","2020-04-30","2020-05-31","2020-06-30","2020-07-31","2020-08-31","2020-09-30","2020-10-31","2020-11-30")
+index_unemployment <- c("2020-01-01","2020-02-01","2020-03-01","2020-04-01","2020-05-01","2020-06-01","2020-07-01","2020-08-01","2020-09-01","2020-10-01","2020-11-01")
+values <- c("January", "February","March","April","May","June","July","August","September","October","November")
 covid_use.df$Months <- values[match(trim(covid_use.df$Date),index_covid)]
 unemployment_2020_use.df$Months <- values[match(trim(unemployment_2020_use.df$TIME),index_unemployment)]
 
