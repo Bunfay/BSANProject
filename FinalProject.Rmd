@@ -110,6 +110,11 @@ corrplot.mixed(cmat)
 
 ## Scatterplots
 ```{r}
+ggplot(merged_data_no_US, aes(x = merged_data_no_US$Confirmed, y = merged_data_no_US$Value, linetype = Country, color = Country)) + geom_point() + scale_color_manual(values = c("red", "blue", "green", "pink", "yellow", "black"))
 
+ggplot(merged_data_US, aes(x = merged_data_US$Confirmed, y = merged_data_US$Value, linetype = Country, color = Country)) + geom_point() + scale_color_manual(values = c("orange"))
+
+merged_data_no_US <- subset(merged_data, Country != "United States")
+merged_data_US <- subset(merged_data, Country == "United States")
 ```
 
