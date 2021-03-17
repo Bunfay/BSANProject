@@ -79,14 +79,6 @@ ggplot(covid_use.df, aes(x = covid_use.df$Date, y = covid_use.df$Death, linetype
 ## Linear Regression Modeling
 ```{r}
 
-Australia_Merged <- subset(merged_data, Country == "Australia")
-Canada_Merged <- subset(merged_data, Country == "Canada")
-Italy_Merged <- subset(merged_data, Country == "Italy")
-Japan_Merged <- subset(merged_data, Country == "Japan")
-Korea_Merged <- subset(merged_data, Country == "Korea")
-UnitedKingdom_Merged <- subset(merged_data, Country == "United Kingdom")
-UnitedStates_Merged <- subset(merged_data, Country == "US")
-
 lm_Australia <- lm(Value ~ Confirmed, data = Australia_Merged)
 lm_Australia
 
@@ -106,6 +98,8 @@ TukeyHSD(b)
 ```{r}
 scatterplotMatrix(merged_data[,c(4:6,9)])
 ```
+
+
 ## Correlation Matrix
 ```{r}
 library(corrplot)
@@ -113,3 +107,9 @@ library(corrplot)
 cmat <- cor(merged_data[,c(4:6,9)])
 corrplot.mixed(cmat)
 ```
+
+## Scatterplots
+```{r}
+
+```
+
