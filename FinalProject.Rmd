@@ -90,7 +90,7 @@ lm_all
 ```{r}
 merged_data$Country <- as.factor(merged_data$Country)
 merged_data$TIME <- as.factor(merged_data$TIME)
-a <- aov(merged_data$Value * merged_data$Confirmed ~ merged_data$Country + merged_data$TIME, data = merged_data)
+a <- aov(merged_data$Value ~ merged_data$Country, data = merged_data)
 anova(a)
 TukeyHSD(a)
 ```
