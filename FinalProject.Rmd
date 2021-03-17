@@ -79,9 +79,6 @@ ggplot(covid_use.df, aes(x = covid_use.df$Date, y = covid_use.df$Death, linetype
 ## Linear Regression Modeling
 ```{r}
 
-lm_Australia <- lm(Value ~ Confirmed, data = Australia_Merged)
-lm_Australia
-
 lm_all <- lm(Value ~ Confirmed, data = merged_data)
 lm_all
 ```
